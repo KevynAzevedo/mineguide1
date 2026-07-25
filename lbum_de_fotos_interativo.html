@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Guia Passo a Passo</title>
+  <!-- Tailwind CSS para estilização moderna e responsiva -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Lucide Icons para ícones dos botões -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <style>
+    /* Transição suave para a imagem ao trocar de passo */
+    .fade-in {
+      animation: fadeIn 0.35s ease-out;
+    }
+    @keyframes fadeIn {
+      from { opacity: 0.2; transform: scale(0.98); }
+      to { opacity: 1; transform: scale(1); }
+    }
+  </style>
+</head>
+<body class="bg-slate-900 text-slate-100 min-h-screen flex flex-col justify-between font-sans antialiased selection:bg-indigo-500 selection:text-white">
+
+  <!-- Cabeçalho -->
+  <header class="w-full py-5 px-4 bg-slate-800/80 backdrop-blur-md border-b border-slate-700/60 sticky top-0 z-20 shadow-md">
+    <div class="max-w-4xl mx-auto flex justify-between items-center gap-2">
+      <div class="flex items-center gap-3">
+        <div class="p-2.5 bg-indigo-600 rounded-xl shadow-lg shadow-indigo-500/30">
+          <i data-lucide="book-open-check" class="w-6 h-6 text-white"></i>
+        </div>
+        <div>
+          <h1 class="text-lg md:text-xl font-bold bg-gradient-to-r from-white to-slate-300 bg-clip-text text-transparent">
+            Guia Passo a Passo
+          </h1>
+          <p class="text-xs text-slate-400 hidden sm:block">Acompanhe as instruções pelas imagens</p>
+        </div>
+      </div>
+      <span id="photo-counter" class="text-xs md:text-sm font-semibold px-4 py-1.5 bg-indigo-950/80 rounded-full border border-indigo-500/30 text-indigo-300 shadow-inner">
+        Passo 1 de 4
+      </span>
+    </div>
+  </header>
+
+  <!-- Conteúdo Principal / Visualizador de Fotos -->
+  <main class="flex-1 max-w-4xl w-full mx-auto p-4 md:p-6 flex flex-col justify-center items-center gap-6">
+
+    <!-- Card da Foto Principal -->
+    <div class="relative w-full bg-slate-800/80 border border-slate-700/60 rounded-2xl shadow-2xl overflow-hidden group">
+      
+      <!-- Container da Imagem com Aspect Ratio Adaptável -->
+      <div class="relative w-full h-[360px] sm:h-[480px] md:h-[580px] bg-slate-950 flex items-center justify-center overflow-hidden">
+        
+        <!-- Imagem Principal (com referrerpolicy="no-referrer" para ignorar bloqueios do Google Drive) -->
+        <img 
+          id="main-photo" 
+          src="" 
+          alt="Imagem do guia passo a passo" 
+          referrerpolicy="no-referrer"
+          class="w-full h-full object-contain fade-in transition-all duration-300"
+        />
+
+        <!-- Mensagem de Aviso em caso de falha no carregamento do Drive -->
+        <div id="error-banner" class="hidden absolute inset-0 bg-slate-950/95 flex-col items-center justify-center p-6 text-center gap-3 z-10">
+          <div class="p-3 bg-amber-500/10 border border-amber-500/20 rounded-full text-amber-400">
+            <i data-lucide="alert-triangle" class="w-8 h-8"></i>
+          </div>
+          <h3 class="text-lg font-bold text-slate-100">Não foi possível carregar a imagem do Google Drive</h3>
+          <p class="text-sm text-slate-400 max-w-md">
+            Verifique se o arquivo no Google Drive está com o acesso configurado como <strong class="text-amber-300">"Qualquer pessoa com o link"</strong>.
+          </p>
+          <div class="mt-2 text-xs bg-slate-900 border border-slate-800 rounded-lg p-3 text-slate-400 text-left max-w-md w-full">
+            <p class="font-semibold text-slate-300 mb-1">Como liberar no Google Drive:</p>
+            <ol class="list-decimal list-inside space-y-1">
+              <li>Abra o arquivo no seu Google Drive.</li>
+              <li>Clique em <strong>Compartilhar</strong>.</li>
+              <li>Em <em>Acesso geral</em>, altere de <em>Restrito</em> para <strong>Qualquer pessoa com o link</strong>.</li>
+            </ol>
+          </div>
+        </div>
+
+        <!-- Botões de Navegação Sobrepostos -->
+        <button 
+          id="btn-prev-overlay" 
+          onclick="prevPhoto()" 
+          title="Passo Anterior"
+          aria-label="Passo Anterior"
+          class="absolute left-3 top-1/2 -translate-y-1/2 p-3.5 rounded-full bg-slate-900/75 hover:bg-indigo-600 active:bg-indigo-700 text-white backdrop-blur-md border border-white/10 transition-all duration-200 transform hover:scale-110 active:scale-95 shadow-xl z-20 cursor-pointer"
+        >
+          <i data-lucide="chevron-left" class="w-6 h-6"></i>
+        </button>
+
+        <button 
+          id="btn-next-overlay" 
+          onclick="nextPhoto()" 
+          title="Próximo Passo"
+          aria-label="Próximo Passo"
+          class="absolute right-3 top-1/2 -translate-y-1/2 p-3.5 rounded-full bg-slate-900/75 hover:bg-indigo-600 active:bg-indigo-700 text-white backdrop-blur-md border border-white/10 transition-all duration-200 transform hover:scale-110 active:scale-95 shadow-xl z-20 cursor-pointer"
+        >
+          <i data-lucide="chevron-right" class="w-6 h-6"></i>
+        </button>
+      </div>
+
+    </div>
+
+    <!-- Controles Inferiores (Botões de Ação + Carrossel de Miniaturas) -->
+    <div class="w-full flex flex-col items-center gap-4">
+
+      <!-- Carrossel de Miniaturas -->
+      <div id="thumbnails-container" class="flex gap-3 p-2.5 overflow-x-auto max-w-full rounded-2xl bg-slate-800/50 border border-slate-700/50 scrollbar-none">
+        <!-- As miniaturas são geradas dinamicamente via JS -->
+      </div>
+
+    </div>
+
+  </main>
+
+  <!-- Rodapé -->
+  <footer class="w-full py-4 text-center text-slate-500 text-xs border-t border-slate-800/80">
+    Use as setas do teclado (← / →) ou deslize na tela para alternar entre os passos do guia.
+  </footer>
+
+  <!-- Lógica JavaScript -->
+  <script>
+    // LISTA PADRÃO DAS IMAGENS DO SEU GUIA (Google Drive):
+    const photos = [
+      'https://drive.google.com/file/d/1hWUVRNrkuIMq6LkyckE3U2GhTNATXPMT/view?usp=drive_link',
+      'https://drive.google.com/file/d/13An7FvWQsP217pxacxIsR7tcXRG7DY4T/view?usp=drive_link',
+      'https://drive.google.com/file/d/1oWckhRyosp4p7S9mswm8O_uyQpOFZFiD/view?usp=drive_link',
+      'https://drive.google.com/file/d/19DWA1NaysYVf0yo8PvVMuHFRJVQBlnY5/view?usp=drive_link'
+    ];
+
+    // Extrai o ID do arquivo do Google Drive
+    function extractDriveId(url) {
+      if (!url) return null;
+      const fileMatch = url.match(/\/d\/([a-zA-Z0-9_-]+)/);
+      const idMatch = url.match(/[?&]id=([a-zA-Z0-9_-]+)/);
+      return (fileMatch && fileMatch[1]) || (idMatch && idMatch[1]) || null;
+    }
+
+    // Gera endpoints otimizados para exibição de imagens do Google Drive
+    function getDriveUrls(url) {
+      const fileId = extractDriveId(url);
+      if (!fileId) return { primary: url, fallback: url };
+
+      // Endpoint primário direto (lh3 CDN do Google)
+      const primary = `https://lh3.googleusercontent.com/d/${fileId}`;
+      // Endpoint secundário de alta resolução caso haja bloqueio de CDN
+      const fallback = `https://drive.google.com/thumbnail?id=${fileId}&sz=w1600`;
+
+      return { primary, fallback };
+    }
+
+    // Estado da aplicação
+    let currentIndex = 0;
+    let fallbackAttempted = false;
+
+    // Elementos da DOM
+    const mainPhoto = document.getElementById('main-photo');
+    const photoCounter = document.getElementById('photo-counter');
+    const thumbnailsContainer = document.getElementById('thumbnails-container');
+    const errorBanner = document.getElementById('error-banner');
+
+    // Inicializa ícones do Lucide
+    lucide.createIcons();
+
+    // Trata falhas de carregamento de imagens com tentativa de fallback
+    mainPhoto.onerror = function() {
+      const currentUrl = photos[currentIndex];
+      const urls = getDriveUrls(currentUrl);
+
+      if (!fallbackAttempted && urls.fallback && mainPhoto.src !== urls.fallback) {
+        fallbackAttempted = true;
+        mainPhoto.src = urls.fallback;
+      } else {
+        // Se ambos falharem, exibe aviso explicativo
+        errorBanner.classList.remove('hidden');
+        errorBanner.classList.add('flex');
+      }
+    };
+
+    // Renderiza a foto do passo atual
+    function renderPhoto() {
+      errorBanner.classList.add('hidden');
+      errorBanner.classList.remove('flex');
+      fallbackAttempted = false;
+
+      const rawUrl = photos[currentIndex];
+      const urls = getDriveUrls(rawUrl);
+
+      // Aplica efeito visual de transição
+      mainPhoto.classList.remove('fade-in');
+      void mainPhoto.offsetWidth; // Recarrega animação
+      mainPhoto.classList.add('fade-in');
+
+      // Atualiza fonte da imagem e contador
+      mainPhoto.src = urls.primary;
+      photoCounter.textContent = `Passo ${currentIndex + 1} de ${photos.length}`;
+
+      updateThumbnails();
+    }
+
+    // Navega para o próximo passo
+    function nextPhoto() {
+      currentIndex = (currentIndex + 1) % photos.length;
+      renderPhoto();
+    }
+
+    // Navega para o passo anterior
+    function prevPhoto() {
+      currentIndex = (currentIndex - 1 + photos.length) % photos.length;
+      renderPhoto();
+    }
+
+    // Seleciona um passo específico
+    function selectPhoto(index) {
+      currentIndex = index;
+      renderPhoto();
+    }
+
+    // Gera as miniaturas na barra inferior
+    function renderThumbnails() {
+      thumbnailsContainer.innerHTML = '';
+      
+      photos.forEach((photoUrl, index) => {
+        const thumbBtn = document.createElement('button');
+        thumbBtn.className = `relative w-16 h-12 sm:w-20 sm:h-14 rounded-xl overflow-hidden transition-all duration-200 border-2 shrink-0 cursor-pointer bg-slate-950 focus:outline-none`;
+        thumbBtn.onclick = () => selectPhoto(index);
+
+        const urls = getDriveUrls(photoUrl);
+
+        const img = document.createElement('img');
+        img.src = urls.primary;
+        img.alt = `Passo ${index + 1}`;
+        img.referrerPolicy = 'no-referrer';
+        img.className = 'w-full h-full object-cover';
+        img.onerror = function() {
+          if (img.src !== urls.fallback) {
+            img.src = urls.fallback;
+          }
+        };
+
+        const overlay = document.createElement('div');
+        overlay.className = 'absolute inset-0 bg-black/40 hover:bg-transparent transition-colors flex items-center justify-center';
+        overlay.innerHTML = `<span class="text-[11px] font-bold text-white bg-black/60 px-2 py-0.5 rounded-md backdrop-blur-sm">${index + 1}</span>`;
+
+        thumbBtn.appendChild(img);
+        thumbBtn.appendChild(overlay);
+        thumbnailsContainer.appendChild(thumbBtn);
+      });
+    }
+
+    // Destaca a miniatura ativa
+    function updateThumbnails() {
+      const thumbs = thumbnailsContainer.children;
+      Array.from(thumbs).forEach((thumb, index) => {
+        if (index === currentIndex) {
+          thumb.classList.add('border-indigo-500', 'ring-2', 'ring-indigo-500/50', 'scale-105');
+          thumb.classList.remove('border-transparent', 'opacity-50');
+          thumb.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+        } else {
+          thumb.classList.remove('border-indigo-500', 'ring-2', 'ring-indigo-500/50', 'scale-105');
+          thumb.classList.add('border-transparent', 'opacity-50');
+        }
+      });
+    }
+
+    // Suporte para teclas de atalho (Seta Esquerda / Seta Direita)
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'ArrowRight') nextPhoto();
+      if (e.key === 'ArrowLeft') prevPhoto();
+    });
+
+    // Suporte para navegação por toque (Deslizar/Swipe no Celular)
+    let touchStartX = 0;
+    let touchEndX = 0;
+    const photoContainer = mainPhoto.parentElement;
+
+    photoContainer.addEventListener('touchstart', (e) => {
+      touchStartX = e.changedTouches[0].screenX;
+    }, { passive: true });
+
+    photoContainer.addEventListener('touchend', (e) => {
+      touchEndX = e.changedTouches[0].screenX;
+      handleSwipe();
+    }, { passive: true });
+
+    function handleSwipe() {
+      const threshold = 40;
+      if (touchEndX < touchStartX - threshold) nextPhoto();
+      if (touchEndX > touchStartX + threshold) prevPhoto();
+    }
+
+    // Inicialização ao carregar a página
+    window.onload = function() {
+      renderThumbnails();
+      renderPhoto();
+    };
+  </script>
+</body>
+</html>
