@@ -1,47 +1,134 @@
 <!DOCTYPE html>
-<html>
+<html lang="pt-BR">
 <head>
+  <meta charset="UTF-8">
+  <title>Guia de Portas Lógicas</title>
   <style>
-    body { background-color: #121212; color: white; font-family: sans-serif; text-align: center; }
-    .btn { display: inline-block; padding: 12px 20px; margin: 10px; background: #333; color: #fff; text-decoration: none; border-radius: 5px; font-weight: bold; }
-    .btn:hover { background: #555; }
-    img { max-width: 80%; border: 2px solid #444; margin-top: 20px; }
+    body { 
+      background-color: #121212; 
+      color: #ffffff; 
+      font-family: sans-serif; 
+      text-align: center; 
+      padding: 20px;
+      margin: 0;
+    }
+    
+    /* Estilo dos Botões */
+    .btn { 
+      display: inline-block; 
+      padding: 12px 20px; 
+      margin: 6px; 
+      background: #333; 
+      color: #fff; 
+      text-decoration: none; 
+      border-radius: 5px; 
+      font-weight: bold; 
+      border: 1px solid #444;
+      cursor: pointer;
+    }
+    
+    .btn:hover { 
+      background: #555; 
+    }
+    
+    .btn-nav {
+      background-color: #0066cc;
+      border-color: #0055b3;
+    }
+    
+    .btn-nav:hover {
+      background-color: #0055b3;
+    }
+
+    .menu-container {
+      margin-bottom: 15px;
+    }
+
+    .nav-container {
+      margin-top: 15px;
+      margin-bottom: 15px;
+    }
+    
+    /* Ajuste da Imagem */
+    img { 
+      max-width: 85%; 
+      max-height: 520px;
+      border: 2px solid #444; 
+      border-radius: 6px;
+      margin-top: 15px;
+    }
+
+    hr {
+      border: 0;
+      height: 1px;
+      background: #333;
+      margin: 20px 0;
+    }
+
+    h1 {
+      margin-bottom: 5px;
+    }
+
+    h2 {
+      color: #0088ff;
+      margin-top: 15px;
+    }
   </style>
 </head>
 <body>
 
   <h1>Guia de Portas Lógicas 1</h1>
+  <p style="color: #aaa; margin-bottom: 15px;">Selecione uma página para visualizar:</p>
   
-  <div>
-    <!-- Substitua os links pelas URLs RAW das suas imagens -->
-    <a class="btn" href="https://github.com/KevynAzevedo/mineguide1/blob/main/1.png?raw=true">Pag 1</a>
-    <a class="btn" href="https://raw.githubusercontent.com/KevynAzevedo/mineguide1/refs/heads/main/2.png">Pag 2</a>
-    <a class="btn" href="https://github.com/KevynAzevedo/mineguide1/blob/main/3.png?raw=true">Pag 3</a>
-    <a class="btn" href="https://github.com/KevynAzevedo/mineguide1/blob/main/4.png?raw=true">Pag 4</a>
+  <!-- MENU PRINCIPAL COM OS LINKS INTERNOS DA PÁGINA -->
+  <div class="menu-container">
+    <a class="btn" href="?img=1">Pag 1</a>
+    <a class="btn" href="?img=2">Pag 2</a>
+    <a class="btn" href="?img=3">Pag 3</a>
+    <a class="btn" href="?img=4">Pag 4</a>
   </div>
 
   <hr>
 
-  <!-- Espaço onde a imagem vai aparecer -->
+  <!-- ESPAÇO ONDE A IMAGEM E OS BOTÕES DE NAVEGAÇÃO APARECEM -->
   <div id="conteudo">
     <p>Selecione uma página acima para visualizar.</p>
   </div>
 
   <script>
-    // Script básico para carregar a imagem selecionada
-    const params = new URLSearchParams(window.location.search);
-    const img = params.get('img');
-    
-    // Mapeie os nomes para os seus links RAW reais do GitHub
+    // Seus links exatos do GitHub (Vírgula corrigida na página 3!)
     const imagens = {
-      '1': 'https://github.com/KevynAzevedo/mineguide1/blob/main/1.png?raw=true',
-      '2':  'https://raw.githubusercontent.com/KevynAzevedo/mineguide1/refs/heads/main/2.png',
-      '3': 'https://github.com/KevynAzevedo/mineguide1/blob/main/3.png?raw=true'
-      '4': 'https://github.com/KevynAzevedo/mineguide1/blob/main/4.png?raw=true'
+      '1': 'https://raw.githubusercontent.com/KevynAzevedo/mineguide1/refs/heads/main/1.png',
+      '2': 'https://raw.githubusercontent.com/KevynAzevedo/mineguide1/refs/heads/main/2.png',
+      '3': 'https://raw.githubusercontent.com/KevynAzevedo/mineguide1/refs/heads/main/3.png',
+      '4': 'https://raw.githubusercontent.com/KevynAzevedo/mineguide1/refs/heads/main/4.png'
     };
 
-    if (img && imagens[img]) {
-      document.getElementById('conteudo').innerHTML = '<img src="' + imagens[img] + '">';
+    const listaChaves = Object.keys(imagens);
+    const params = new URLSearchParams(window.location.search);
+    const imgAtual = params.get('img');
+
+    if (imgAtual && imagens[imgAtual]) {
+      const indexAtual = listaChaves.indexOf(imgAtual);
+      
+      // Cálculo dos índices para avançar e voltar
+      const indexAnterior = (indexAtual - 1 + listaChaves.length) % listaChaves.length;
+      const indexProximo = (indexAtual + 1) % listaChaves.length;
+
+      const chaveAnterior = listaChaves[indexAnterior];
+      const chaveProxima = listaChaves[indexProximo];
+
+      // Monta os botões de navegação + título + imagem na tela
+      document.getElementById('conteudo').innerHTML = `
+        <div class="nav-container">
+          <a class="btn btn-nav" href="?img=${chaveAnterior}">⬅️ Anterior (Pag ${chaveAnterior})</a>
+          <a class="btn" href="index.html">🏠 Início</a>
+          <a class="btn btn-nav" href="?img=${chaveProxima}">Próxima (Pag ${chaveProxima}) ➡️</a>
+        </div>
+        
+        <h2>Página ${imgAtual}</h2>
+        <img src="${imagens[imgAtual]}" alt="Página ${imgAtual}">
+      `;
     }
   </script>
 
