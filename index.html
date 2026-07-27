@@ -10,20 +10,21 @@
 </head>
 <body>
 
-  <h1>Guia de Portas Lógicas</h1>
+  <h1>Guia de Portas Lógicas 1</h1>
   
   <div>
     <!-- Substitua os links pelas URLs RAW das suas imagens -->
-    <a class="btn" href="?img=and">Porta AND</a>
-    <a class="btn" href="?img=or">Porta OR</a>
-    <a class="btn" href="?img=not">Porta NOT</a>
+    <a class="btn" href="https://github.com/KevynAzevedo/mineguide1/blob/main/1.png?raw=true">Pag 1</a>
+    <a class="btn" href="https://raw.githubusercontent.com/KevynAzevedo/mineguide1/refs/heads/main/2.png">Pag 2</a>
+    <a class="btn" href="https://github.com/KevynAzevedo/mineguide1/blob/main/3.png?raw=true">Pag 3</a>
+    <a class="btn" href="https://github.com/KevynAzevedo/mineguide1/blob/main/4.png?raw=true">Pag 4</a>
   </div>
 
   <hr>
 
   <!-- Espaço onde a imagem vai aparecer -->
   <div id="conteudo">
-    <p>Selecione uma porta lógica acima para visualizar.</p>
+    <p>Selecione uma página acima para visualizar.</p>
   </div>
 
   <script>
@@ -33,9 +34,10 @@
     
     // Mapeie os nomes para os seus links RAW reais do GitHub
     const imagens = {
-      'and': 'https://raw.githubusercontent.com/seu-usuario/seu-repo/main/and.png',
-      'or':  'https://raw.githubusercontent.com/seu-usuario/seu-repo/main/or.png',
-      'not': 'https://raw.githubusercontent.com/seu-usuario/seu-repo/main/not.png'
+      '1': 'https://github.com/KevynAzevedo/mineguide1/blob/main/1.png?raw=true',
+      '2':  'https://raw.githubusercontent.com/KevynAzevedo/mineguide1/refs/heads/main/2.png',
+      '3': 'https://github.com/KevynAzevedo/mineguide1/blob/main/3.png?raw=true'
+      '4': 'https://github.com/KevynAzevedo/mineguide1/blob/main/4.png?raw=true'
     };
 
     if (img && imagens[img]) {
