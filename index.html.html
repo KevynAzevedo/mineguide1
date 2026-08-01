@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <title>Loop Video</title>
+    <style>
+        body, html {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+            background: #000;
+            overflow: hidden;
+        }
+        video {
+            width: 100%;
+            height: 100%;
+            object-fit: contain; /* Use 'cover' se quiser preencher a tela toda cortando as bordas */
+        }
+    </style>
+</head>
+<body>
+    <!-- 'autoplay' inicia sozinho, 'loop' repete eternamente, 'muted' é obrigatório para o navegador autorizar o autoplay automático -->
+    <video src="AND.mp4" autoplay loop muted playsinline></video>
+</body>
+</html>
